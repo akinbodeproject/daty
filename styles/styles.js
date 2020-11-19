@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
     },
     dailymatchbakcgroundImage: {
       flex:1,
-       resizeMode: "contain",
-       paddingLeft:wp('4.5%'),
-         paddingRight:wp('4.5%'),
+      resizeMode: "contain",
+       paddingLeft:wp('2.5%'),
+        paddingRight:wp('2.5%'),
         width: wp('100%'),
         height: hp('100%'),
        
@@ -146,7 +146,7 @@ dailymatchloginView:{
     elevation: 4,
   },
    MainContainer: {
-    justifyContent: 'center',
+   
     flex: 1,
    
 backgroundColor:'#fefeff',
@@ -160,11 +160,11 @@ backgroundColor:'#fefeff',
   usersmatch:{
 flex: 1,
  flexDirection: 'column',
-  margin: wp('1%'),
+
   backgroundColor:'#fefefe',
   alignItems:'center',
   height:wp('50%'),
-  padding:wp('2%'), 
+  
   },
   avatarbutton:{
     width:null
@@ -182,7 +182,148 @@ flex: 1,
     marginBottom: 2,
     justifyContent: "center",
  },
+ displayname:{
+  fontSize:wp('0.2%')
+ },
+ banner:{
+  height:wp('60%'),
+  width:wp('95%'),
+  backgroundColor:'#441964',
+  alignItems:'center',
+  justifyContent: 'center',
+ },
+ fullname:{
+   color:'#FFFFFF'
+ },
+ school:{
+   color:'#FFFFFF'
+ },
+ iconName: {
+  
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent:'space-evenly',
+    top:wp('-15%')
+  },
+  iconDept: {
+  
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent:'space-evenly',
+    top:wp('-12%')
+  },
+   edit: {
+    flex:1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop:wp('20%')
+  },
+  camera:{
+    top:wp('-17%'),
+    left:wp('17%')
+  },
+  wallet:{
+   right:wp('20%')
+  },
+  walletText:{
+    right:wp('-1%')
+  },
+  premium:{
+   left:wp('25%')
+  },
+  premiumText:{
+   right:wp('5%')
+  },
+  useredit:{
+    marginTop:wp('5%'),
+   right:wp('-3%')
+  },
+  usereditText:{
+   right:wp('-4%')
+  },
+   verify: {
+    flex:1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop:wp('10%'),
+    backgroundColor:'#EEEEEE',
+     height:wp('60%'),
+     width:wp('95%'),
+     marginBottom:wp('10%'),
+     borderRadius: 10,
+     justifyContent:'center'
+  },
+  verifyimage: {
+    width: wp('30%'),
+    height: wp('30%'),
+    right:wp('3%'),
+    top:wp('2%')
+  },
+  verifyHeadingContainer:{
+    top:wp('2%'),
+    right:wp('-3%'),
+    
+    flexWrap: 'wrap',
+    
+ 
+  },
+  verifyHeading:{
+     fontSize: wp('7%'),
+     
+   
+  },
+  verifyText:{
+    fontSize:wp('4%')
+    
+  },
+  verifymark:{
+    top:wp('-15%'),
+    right:wp('-18%'),
+    fontSize:wp('10%')
+  },
+  centralise:{
+    marginTop:wp('5%'),
+    justifyContent:'center',
+    alignItems:'center' 
+  },
+  avatarImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:wp('10%'),
+    marginBottom:wp('5%')
+  },
+  indprofile:{
+ backgroundColor:'#441964',
+  alignItems:'center',
+  justifyContent: 'center',
+ 
+  },
+
+   card: {
+    alignItems: 'center',
+    borderRadius: 5,
+    overflow: 'hidden',
+    borderColor: 'grey',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    elevation: 1,
+  },
+  thumbnail: {
+    width: 300,
+    height: 300,
+  },
+  text: {
+    fontSize: 20,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  noMoreCards: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
+
 
 
 export default styles;

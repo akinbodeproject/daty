@@ -6,28 +6,55 @@ import styles from '../styles/styles.js';
 import Usertile from '../components/userstile';
 import MusicRoute from '../components/firsttab';
 import AlbumsRoute from '../components/secondtab';
+import Chat from '../components/chat';
 import RecentsRoute from '../components/thirdtab';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import FilterDialog from '../components/filterdialog';
+import { createStackNavigator } from 'react-navigation-stack';
+export default class DailyMatch extends React.Component {
 
-const DailyMatch = () => {
-
-
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: 'music', title: 'Matches', icon: 'heart' },
-    { key: 'links', title: 'Links', icon: 'link' },
+state = {
+    index: 0,
+    routes: [
+    
+      { key: 'music', title: 'Matches', icon: 'heart' },
+      { key: 'swipe', title: 'Swipe', icon: 'link' },
     { key: 'chat', title: 'Chat', icon: 'chat' },
     { key: 'profile', title: 'Profile', icon: 'account' },
-  ]);
+    ],
+  };
 
-  const renderScene = BottomNavigation.SceneMap({
-    music: MusicRoute,
-    links: AlbumsRoute,
-    profile: RecentsRoute,
-    chat: RecentsRoute,
-  });
+  _handleIndexChange = index => this.setState({ index });
+componentDidMount() {
+  //console.log(this.props,'test')
+    
+  }
 
+   
+  _renderScene = ({ route,  jumpTo }) => {
+    switch(route.key) {
+      
+      case 'music':
+        return (<MusicRoute jumpTo={jumpTo} {...this.props} />);
+       case 'swipe':
+        return (<AlbumsRoute jumpTo={jumpTo} {...this.props} />);
+        case 'chat':
+        return (<Chat jumpTo={jumpTo} {...this.props} />);
+        case 'profile':
+        return (<Usertile jumpTo={jumpTo} {...this.props} />);
+        
+    }
+  }
+  //BottomNavigation.SceneMap({
+    //music: MusicRoute,
+   // links: AlbumsRoute,
+    //profile: Usertile,
+    //chat: RecentsRoute,
+  //});
+
+render() {
+
+   const { navigation } = this.props;
   return (
     <View style={styles.container}>
       <StatusBar
@@ -36,20 +63,20 @@ const DailyMatch = () => {
   />
     <Appbar.Header statusBarHeight={hp('1%')}  style={{backgroundColor:'#ddd'}}>
          
-      <Appbar.Content title="Daily Matches"  />
+      <Appbar.Content title=""  />
      
      <FilterDialog/>
     </Appbar.Header>
 
  <BottomNavigation
    style={styles.container}
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
+     navigationState={this.state}
+        onIndexChange={this._handleIndexChange}
+        renderScene={this._renderScene}
     />
  </View>
   );
-};
+}
+}
 
-export default DailyMatch;
 

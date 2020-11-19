@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "276181104829",
+    "firebase_url": "https://trrulyapp-1a909.firebaseio.com",
+    "project_id": "trrulyapp-1a909",
+    "storage_bucket": "trrulyapp-1a909.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276181104829:android:fb2d85b0eddc2467579fd4",
+        "android_client_info": {
+          "package_name": "com.trruly.trrulyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276181104829-i4iicq8p7ok6gd2iimg4no5eju9vlc75.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyXxq1b0QdxnSyRAREJ3g4kxZ797QOTxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276181104829-i4iicq8p7ok6gd2iimg4no5eju9vlc75.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

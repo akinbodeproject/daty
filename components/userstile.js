@@ -6,14 +6,19 @@ import styles from '../styles/styles.js';
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
 import { Ionicons } from '@expo/vector-icons';
 import  ProfilePics from '../src/camera.js';
+import * as ImagePicker from 'expo-image-picker';
+import { firebase } from "../model/model.js";
 export default class userstile extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       dataSource: {},
       fullname:"",
       photo:"",
-      school:""
+      school:"",
+      email:"",
+      id:"",
+      photo:""
     };
     this.getToken()
 }
@@ -25,10 +30,13 @@ async getToken() {
       this.setState({
         fullname:data.fullName,
         photo:data.photo,
-        school: data.school
+        school: data.school,
+        email:data.email,
+        id:data.id,
+        phone:data.phone
       })
       
-      console.log(data);
+      
     } catch (error) {
       console.log("Something went wrong", error);
     }
@@ -49,9 +57,45 @@ createTwoButtonAlert(){
   { cancelable: false }
 );
   }
+
+   chooseImagePress = async ()=>{
+    const { navigation } = this.props;
+    const {fullname,phone,id} =  this.state
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      
+    });
+    if(!result.canclled){
+      this.uploadImage(result.uri,fullname,id).then(()=>{
+    this.props.jumpTo('swipe')
+    Alert.alert('success')
+      }).catch((error)=>{
+       console.error(error)
+      });
+    }
+   }
+
+   uploadImage = async (uri,imageName,id)=>{
+     
+    const response =  await fetch(uri);
+    const blob = await response.blob();
+
+    var ref = firebase.storage().ref().child("Profile/"+imageName);
+    //Alert.alert(ref)
+    ref.getDownloadURL().then((url)=>{
+    firebase.firestore().collection('users').doc(id).update({
+    photo: url,
+  });
+console.log(url)
+    });
+   
+    return ref.put(blob);
+   }
+
   render() {
    
     const {fullname,photo,school} =  this.state
+
     return (
       <View style={styles.MainContainer}>
       <ImageBackground source={require('../assets/frame.png')} style={styles.dailymatchbakcgroundImage}>
@@ -62,6 +106,7 @@ createTwoButtonAlert(){
          <TouchableOpacity 
       rippleColor="rgba(255, 0, 0, .32)"
        style={styles.camera}
+       onPress = {this.chooseImagePress}
       >
       <Avatar.Icon size={50} icon="camera" pointerEvents={"none"}/>
       </TouchableOpacity>

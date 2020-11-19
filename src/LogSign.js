@@ -15,12 +15,7 @@ export default class LogSignApp extends React.Component {
       password: '',
     };
   }
-  
-  onLogin() {
-    const { username, password } = this.state;
-
-    Alert.alert('Credentials', `${username} + ${password}`);
-  }
+ 
     render() {
         
         return (
