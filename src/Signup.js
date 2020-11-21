@@ -37,7 +37,7 @@ export default class SignUpApp extends React.Component {
       photo:"",
       date:new Date(),
       address:"",
-      dob:"",
+      dob:"N/A",
       department:"",
       interest:[],
       languages:[],

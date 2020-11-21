@@ -155,7 +155,8 @@ backgroundColor:'#fefeff',
   imageThumbnail: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom:wp('5%')
+    marginBottom:wp('5%'),
+    left:wp('4%')
   },
   usersmatch:{
 flex: 1,
@@ -163,6 +164,15 @@ flex: 1,
 
   backgroundColor:'#fefefe',
   alignItems:'center',
+  height:wp('50%'),
+  
+  },
+  usersmatch2:{
+flex: 1,
+ flexDirection: 'column',
+
+  backgroundColor:'#fefefe',
+  
   height:wp('50%'),
   
   },
@@ -196,21 +206,22 @@ flex: 1,
    color:'#FFFFFF'
  },
  school:{
-   color:'#FFFFFF'
+   color:'#FFFFFF',
+   paddingLeft:wp('0.4'),
  },
  iconName: {
   
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent:'space-evenly',
-    top:wp('-15%')
+    top:wp('-18%')
   },
   iconDept: {
   
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent:'space-evenly',
-    top:wp('-12%')
+    top:wp('-16%')
   },
    edit: {
     flex:1,

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Surface, Text,Avatar,TouchableRipple } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {StatusBar,ImageBackground, StyleSheet, Alert,View, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import {StatusBar,ImageBackground, StyleSheet, Alert,View, Image, TouchableOpacity,ActivityIndicator, AsyncStorage } from 'react-native';
 import styles from '../styles/styles.js';
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,7 +18,10 @@ export default class userstile extends Component {
       school:"",
       email:"",
       id:"",
-      photo:""
+      photo:"",
+      loading: false,
+      visible:false,
+      offlineProPics:"",
     };
     this.getToken()
 }
@@ -33,9 +36,10 @@ async getToken() {
         school: data.school,
         email:data.email,
         id:data.id,
-        phone:data.phone
+        phone:data.phone,
+        offlineProPics:data.photo,
       })
-      
+      console.log(data)
       
     } catch (error) {
       console.log("Something went wrong", error);
@@ -65,10 +69,10 @@ createTwoButtonAlert(){
       allowsEditing: true,
       
     });
+      
     if(!result.canclled){
       this.uploadImage(result.uri,fullname,id).then(()=>{
-    this.props.jumpTo('swipe')
-    Alert.alert('success')
+      
       }).catch((error)=>{
        console.error(error)
       });
@@ -82,19 +86,31 @@ createTwoButtonAlert(){
 
     var ref = firebase.storage().ref().child("Profile/"+imageName);
     //Alert.alert(ref)
-    ref.getDownloadURL().then((url)=>{
+   
+    this.setState({
+      loading:true
+    })
+//console.log(url)
+ref.put(blob).then(()=>{
+   ref.getDownloadURL().then((url)=>{
     firebase.firestore().collection('users').doc(id).update({
     photo: url,
-  });
-console.log(url)
+  }).then(()=>{
+      
+    this.setState({
+          loading:false,
+          offlineProPics:url,
+        })
+});
+})
     });
    
-    return ref.put(blob);
+    // ref.put(blob);
    }
 
   render() {
    
-    const {fullname,photo,school} =  this.state
+    const {fullname,photo,school,offlineProPics} =  this.state
 
     return (
       <View style={styles.MainContainer}>
@@ -102,13 +118,15 @@ console.log(url)
        <View style={styles.usersmatch}>
         <View style={styles.banner}>
       
-        <Avatar.Image size={wp('40%')} style={styles.avatarImage} source={require('../assets/avatar.jpg')} />
+        <Avatar.Image size={wp('40%')} style={styles.avatarImage} source={offlineProPics==""? require('../assets/avatar.jpg'):{uri:offlineProPics}} />
          <TouchableOpacity 
       rippleColor="rgba(255, 0, 0, .32)"
        style={styles.camera}
        onPress = {this.chooseImagePress}
       >
+      
       <Avatar.Icon size={50} icon="camera" pointerEvents={"none"}/>
+      <ActivityIndicator style={{top:hp('1%'),zInex:100}} animating={this.state.loading}  color={"#FFF"} />
       </TouchableOpacity>
         <View style={styles.iconName}>
         <Ionicons name="md-person" size={20} color="green" />

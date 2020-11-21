@@ -25,7 +25,7 @@ export default class MusicRoute extends React.Component {
       lang:[],
       school:"",
       department:"",
-      outOfCards: false
+    
     };
     //this.getDetails();
     this.ref = firebase.firestore().collection('users');
@@ -131,7 +131,7 @@ render() {
           data={this.state.posts}
           renderItem={({ item }) => (
           
-    <View style={styles.usersmatch}>
+    <View style={ item.length%2==0?styles.usersmatch:styles.usersmatch2}>
      <TouchableHighlight
          key={item.fullName}
          onPress={() =>this.props.navigation.navigate('userdetails')}
