@@ -28,7 +28,7 @@ const gotoHome = () =>{
 
 const handleRegister = async (values)=>{
 setLoading(true);
-const { name, email, gender, theState, lookingFor, password} = values;
+// const { name, email, gender, theState, lookingFor, password} = values;
 
     // try {
     //  let response =  await userAuth.createUserWithEmailAndPassword(email, password);
