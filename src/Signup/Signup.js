@@ -1,7 +1,6 @@
-import React, {useState, useContext, useEffect, useMemo} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import { View, Text, ActivityIndicator, 
     SafeAreaView, Alert, TouchableOpacity} from 'react-native';
-import { userRef } from '../../firebase/config';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import {SignupStyles} from './SignupStyles';
 import SignupForm from './SignupForm';
@@ -9,10 +8,7 @@ import {firebase} from '../../model/model'
 
 const Signup = ({navigation}) => {
 const [loading, setLoading] = useState(false);
-const { handleUserToken} = useContext(UserContext);
-const { userToken} = useContext(UserContext);
 const [visible, setVisible] = React.useState(false);
-const {SignIn} = useContext(AuthContext);
 const [userData, setuserData] = useState(null)
 
 const toggleAlert = React.useCallback(() => {
@@ -21,6 +17,8 @@ const toggleAlert = React.useCallback(() => {
 
 const gotoHome = () =>{
     toggleAlert()
+
+    // pass user data as param to signin function from context
     SignIn(userData)
 
   }
@@ -60,7 +58,7 @@ const { name, email, gender, theState, lookingFor, password} = values;
     // }
    
    
-   
+    
 }
 
 return (
