@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image,
     TextInput, TouchableOpacity, ActivityIndicator,} from 'react-native';
 import LoginStyles from '../styles/LoginStyles';
 import { firebase } from "../model/model.js";
-import Loading from './Loading';
+
 
 
 const gradientHeigth = 300;
@@ -82,7 +82,9 @@ export default function Login({navigation}) {
            
             {/* ===== Login form =========== */}
             <View style={LoginStyles.loginForm}>
-              
+               <ActivityIndicator size="large" color="#ffffff"
+               animating ={loading}
+              />
                 <TextInput style={LoginStyles.Logininput} name="email" 
                     onChangeText={handleEmail}
                     value={email}
