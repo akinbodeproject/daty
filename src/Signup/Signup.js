@@ -2,6 +2,7 @@ import React, {useState, useEffect, useMemo} from 'react'
 import { View, Text, ActivityIndicator, 
     SafeAreaView, Alert, TouchableOpacity} from 'react-native';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {SignupStyles} from './SignupStyles';
 import SignupForm from './SignupForm';
 import {firebase} from '../../model/model'
@@ -17,47 +18,65 @@ const toggleAlert = React.useCallback(() => {
 
 const gotoHome = () =>{
     toggleAlert()
-
-    // pass user data as param to signin function from context
-    SignIn(userData)
-
+    navigation.navigate('Datinglist',{user: userData})
   }
 
+const  storeToken = async (data)=> {
+    try {
+       await AsyncStorage.setItem("userData", JSON.stringify(data));
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+  }
 
 const handleRegister = async (values)=>{
-setLoading(true);
-// const { name, email, gender, theState, lookingFor, password} = values;
+    setLoading(true)
+     const {name,password,email,school,phone} = values
+        firebase.auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid
+                const data = {
+                    id: uid,
+                    fullName: name,
+                    password: password,
+                    school: school,
+                    phone: phone,
+                    email: email,
+                    address:new firebase.firestore.GeoPoint(0, 0),
+                    dob: "",
+                    interest:[],
+                    languages:[],
+                    department:"",
+                    photo:"",
+                    date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
+                    
+                };
+                const usersRef = firebase.firestore().collection('users')
+                const socialsRef = firebase.firestore().collection('socials')
+                usersRef
+                    .doc(uid)
+                    .set(data)
+                    .then(() => {
+                        socialsRef
+                    .doc(uid)
+                    .set({id:uid,"link":""})
+                      storeToken(data)
+                      setLoading(false);
+                      setuserData(data)
+                      toggleAlert();
+                      
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
 
-    // try {
-    //  let response =  await userAuth.createUserWithEmailAndPassword(email, password);
-    //   if(response && response.user){
-    //     const uid = response.user.uid;
-    //     const data = {
-    //         id: uid,
-    //         name: name,
-    //         email: email,
-    //         gender: gender,
-    //         photo: '',
-    //         theState: theState,
-    //         lookingFor: lookingFor,
-    //         date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-    //     }
-    //     const usersRef = firebase.firestore().collection('users');
-    //      usersRef
-    //      .doc(uid).set(data).then(() => {
-    //         //  toggleAlert();
-    //         //  setuserAuth(true);
-    //         setLoading(false);
-    //         setuserData(data);
-    //          toggleAlert();
-    //         }).catch((error) => {alert(error)});   
-    //   }
-    // }
-    // catch (e) {
-    //   console.error(e.message);
-    // }
-   
-   
+            })
+            .catch((error) => {
+                alert(error)
+        });
+
+   console.log(values);
     
 }
 
