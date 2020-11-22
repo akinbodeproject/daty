@@ -5,7 +5,7 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { name as appName } from "./app.json";
 import LogSignApp from "./src/LogSign";
 import App from "./src/App";
-import SignUp from "./src/Signup";
+import SignUp from "./src/Signup/Signup";
 import DatingGrid from "./src/dailymatches";
 import userdetails from "./src/userprofile";
 import firsttab from "./components/firsttab";

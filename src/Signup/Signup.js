@@ -1,7 +1,6 @@
 import React, {useState, useContext, useEffect, useMemo} from 'react'
 import { View, Text, ActivityIndicator, 
     SafeAreaView, Alert, TouchableOpacity} from 'react-native';
-import { userRef } from '../../firebase/config';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import {SignupStyles} from './SignupStyles';
 import SignupForm from './SignupForm';
