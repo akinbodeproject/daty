@@ -49,7 +49,7 @@ const handleRegister = async (values)=>{
                     languages:[],
                     department:"",
                     photo:"",
-                    date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
+                    date: new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getDate()
                     
                 };
                 const usersRef = firebase.firestore().collection('users')
