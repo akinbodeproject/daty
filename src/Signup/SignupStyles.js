@@ -13,7 +13,7 @@ export const SignupStyles = StyleSheet.create({
     },
 
     formContainer:{
-        marginTop: '5%',
+        marginTop: '20%',
         flex: 1,
         width: '100%',
         alignItems: 'center',
@@ -28,14 +28,23 @@ export const SignupStyles = StyleSheet.create({
     },
     form:{
         padding:10,
+        paddingTop:40,
         marginTop:'6%',
-        width: '100%',
+        width: '90%',
         alignItems: 'center',
         backgroundColor:'#5d4f82',
         borderTopRightRadius:50,
         borderBottomLeftRadius:50,
-        borderWidth:5,
-        borderColor:"#eea985",
+        borderWidth:2,
+        borderColor:"#4e416d",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
     },
     input:{
         borderWidth:1,
