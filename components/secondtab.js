@@ -15,20 +15,7 @@ class Card extends React.Component {
     super(props);
  
   }
-async getToken() {
-    try {
-      let userData = await AsyncStorage.getItem("userData");
-      let data = JSON.parse(userData);
-      data.photo ==""? this.createTwoButtonAlert():""
-      this.setState({
-        userId:data.id
-        
-      })
-      console.log(userId)
-    } catch (error) {
-      console.log("Something went wrong", error);
-    }
-  }
+
  getAge = (dateString)=>{
     var today = new Date();
     var birthDate = new Date(dateString);
@@ -91,7 +78,8 @@ export default class AlbumsRoute extends Component {
     this.ref = firebase.firestore().collection('users').where("photo","!=","");
     
   }
-
+//This function get id from AsyncStorage and send a like requets to firestore
+//It is the function called when you swipe to the right
 async handleYup (card) {
   let userData = await AsyncStorage.getItem("userData");
       let data = JSON.parse(userData);
