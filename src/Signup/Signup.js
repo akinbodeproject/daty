@@ -12,6 +12,11 @@ const [loading, setLoading] = useState(false);
 const [visible, setVisible] = React.useState(false);
 const [userData, setuserData] = useState(null)
 
+const handleError = (error)=>{
+    setLoading(false);
+    alert(error)
+}
+
 const toggleAlert = React.useCallback(() => {
     setVisible(!visible);
   }, [visible]);
@@ -68,16 +73,13 @@ const handleRegister = async (values)=>{
                       
                     })
                     .catch((error) => {
-                        alert(error)
+                    handleError(error);
                     });
 
             })
             .catch((error) => {
-                alert(error)
+                 handleError(error);
         });
-
-   console.log(values);
-    
 }
 
 return (

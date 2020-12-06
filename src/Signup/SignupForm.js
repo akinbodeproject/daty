@@ -9,22 +9,23 @@ import * as yup from 'yup';
 const SignupSchema = yup.object({
 name: yup.string()
     .required()
-    .min(5),
+    .min(5, "Too short"),
 email: yup.string()
-    .required()
-    .email()
+    .required('required')
+    .email('Must be a valid email')
     .min(10),
 
 phone: yup.number()
-    .required(),
+    .required('Required'),
     
 
 school: yup.string()
-    .required()
-    .max(20),
+    .required('Required')
+    .max(20)
+    .min(4),
 
 password: yup.string()
-    .required()
+    .required('Required')
     .min(5)
 })
 export default function SignupForm(props) {
