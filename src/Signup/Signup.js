@@ -53,14 +53,14 @@ const handleRegister = async (values)=>{
                     
                 };
                 const usersRef = firebase.firestore().collection('users')
-                const socialsRef = firebase.firestore().collection('socials')
+                const socialsRef = firebase.firestore().collection(uid)
                 usersRef
                     .doc(uid)
                     .set(data)
                     .then(() => {
                         socialsRef
                     .doc(uid)
-                    .set({id:uid,"link":""})
+                    .set({id:uid,"senderId":"","status":""})
                       storeToken(data)
                       setLoading(false);
                       setuserData(data)

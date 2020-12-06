@@ -86,7 +86,15 @@ const styles = StyleSheet.create({
         paddingRight:wp('2.5%'),
         width: wp('100%'),
         height: hp('100%'),
-       
+        left:wp('1%'),
+        right:wp('1%')
+    },
+      swipeImage: {
+      flex:1,
+      resizeMode: "cover",
+      width: wp('100%'),
+      height: hp('80%'),
+        
     },
 dailymatchloginView:{
     marginTop:hp('60%')

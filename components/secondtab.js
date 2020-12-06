@@ -1,133 +1,137 @@
 'use strict';
 
-import React from 'react';
-import {StyleSheet, Text, View,Dimensions,Animated,PanResponder,ImageBackground,ActivityIndicator,Image,TouchableOpacity,AsyncStorage } from 'react-native';
+import React, { Component }  from 'react';
+import {StyleSheet, Text,Alert, View,Dimensions,Animated,PanResponder,ImageBackground,ActivityIndicator,Image,TouchableOpacity,AsyncStorage } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import SwipeCards from 'react-native-swipe-cards';
 import { firebase } from "../model/model.js";
 import styles from '../styles/styles.js';
 import { Ionicons } from '@expo/vector-icons';
-
-
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDHT = Dimensions.get('window').width
-export default class AlbumsRoute extends React.Component {
+class Card extends React.Component {
   constructor(props) {
+    super(props);
+ 
+  }
+async getToken() {
+    try {
+      let userData = await AsyncStorage.getItem("userData");
+      let data = JSON.parse(userData);
+      data.photo ==""? this.createTwoButtonAlert():""
+      this.setState({
+        userId:data.id
+        
+      })
+      console.log(userId)
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+  }
+ getAge = (dateString)=>{
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+  render() {
     
+    return (
+      <View style={sty.card}>
+        <ImageBackground style={sty.thumbnail} source={{uri: this.props.photo}} >
+        <View style={sty.toplayer}>
+        <Text style={sty.text}>{this.props.fullName}</Text>
+        <Text style={sty.text}>{this.props.dob!=""?this.getAge(this.props.dob):"N/A"} Years</Text>
+        <Text style={sty.text}>20 miles away</Text>
+        </View>
+        </ImageBackground>
+      </View>
+    )
+  }
+}
+
+class NoMoreCards extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
+
+  render() {
+    return (
+      <View>
+        <Text style={sty.noMoreCardsText}>No more cards</Text>
+      </View>
+    )
+  }
+}
+
+export default class AlbumsRoute extends Component {
+  constructor(props) {
     super(props);
     this.unsubscribe = null;
-    this.position = new Animated.ValueXY()
+    //this.getToken();
     this.state = {
-      currentIndex:0,
-       posts:[],
+      cards:  [],
       loading: true,
       visible:false,
       photo:"",
+      fullName:"",
       lang:[],
       school:"",
       department:"",
+      userId:""
+    };
+     
+    this.ref = firebase.firestore().collection('users').where("photo","!=","");
     
-    }
-    this.rotate = this.position.x.interpolate({
-      inputRange:[-SCREEN_WIDHT/2, 0, SCREEN_WIDHT/2],
-      outputRange:['-10deg' , '0deg' ,'10deg'],
-      extrapolate:'clamp'
-    })
-
-    this.rotateAndTranslate = {
-      transform:[{
-      rotate : this.rotate
-      },
-     ...this.position.getTranslateTransform()
-      ]
-    }
-    this.likeOpacity = this.position.x.interpolate({
-      inputRange:[-SCREEN_WIDHT/2, 0, SCREEN_WIDHT/2],
-      outputRange:[0 , 0 ,1],
-      extrapolate:'clamp'
-    })
-
-    this.dislikeOpacity = this.position.x.interpolate({
-      inputRange:[-SCREEN_WIDHT/2, 0, SCREEN_WIDHT/2],
-      outputRange:[1 , 0 ,0],
-      extrapolate:'clamp'
-    })
-
-    this.nextCardOpacity = this.position.x.interpolate({
-      inputRange:[-SCREEN_WIDHT/2, 0, SCREEN_WIDHT/2],
-      outputRange:[1 , 0 ,1],
-      extrapolate:'clamp'
-    })
-
-this.nextCardScale = this.position.x.interpolate({
-      inputRange:[-SCREEN_WIDHT/2, 0, SCREEN_WIDHT/2],
-      outputRange:[1 , 0.8 ,1],
-      extrapolate:'clamp'
-    })
-this.ref = firebase.firestore().collection('users');
   }
 
-componentWillMount(){
-  this.PanResponder = PanResponder.create({
+async handleYup (card) {
+  let userData = await AsyncStorage.getItem("userData");
+      let data = JSON.parse(userData);
+firebase.firestore().collection(card.id).doc(card.id).update({
+    "senderId": data.id,
+    "status": "Request",
+  });
+   
+ }
+  handleNope (card) {
+    console.log(`Nope for ${card.fullName}`)
+  }
+  handleMaybe (card) {
+    console.log(`Maybe for ${card.fullName}`)
+  }
 
-    onStartShouldSetPanResponder:(evt,gestureState)=>true,
 
-    onPanResponderMove:(evt,gestureState)=>{
-      this.position.setValue({x:gestureState.dx,y:gestureState.dy})
-    },
-    onPanResponderRelease:(evt,gestureState)=>{
-
-     if(gestureState.dx>120){
-      Animated.spring(this.position,
-      {
-        toValue:{x:SCREEN_WIDHT+100,y:gestureState.dy}
-      }).start(()=>{
-        this.setState({currentIndex:this.state.currentIndex+1},()=>{
-          this.position.setValue({x:0,y:0})
-        })
-      })
-     }
-     else if(gestureState.dx< -120){
-      Animated.spring(this.position,
-      {
-        toValue:{x: -SCREEN_WIDHT -100,y:gestureState.dy}
-      }).start(()=>{
-        this.setState({currentIndex:this.state.currentIndex+1},()=>{
-          this.position.setValue({x:0,y:0})
-        })
-      })
-     }
-     else{
-      Animated.spring(this.position,
-      {
-        toValue:{x: 0,y:0},
-        friction:4
-      }).start()
-     }
-    }
-  })
-}
-
+  
 
 componentDidMount() {
-  //console.log(this.props,'test')
+   
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
-  
+     
   }
+  
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
   onCollectionUpdate = (querySnapshot) => {
-    const posts = [];
+    const cards = [];
     const lang =[];
     querySnapshot.forEach((doc) => {
-      const { fullName, password, school,phone, email,address,photo,date,dob,interest,languages} = doc.data();
+      const { fullName,id, password, school,phone, email,address,photo,date,dob,interest,languages} = doc.data();
       //console.log(doc.data())
-      posts.push({
+      cards.push({
         
         fullName,
+        id,
         password,
         school,
         phone,
@@ -143,120 +147,41 @@ componentDidMount() {
      });
    
     this.setState({
-      posts,
+      cards,
       loading: false,
 
    });
    //console.log(cards)
   }
 
-  getAge = (dateString)=>{
-    var today = new Date();
-    var birthDate = new Date(dateString);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
-}
-
-  renderUsers =()=>{
-    
-  const { navigation } = this.props;
- const {photo,visible,fullName,age,id} =  this.state
-
-    return this.state.posts.map((item,i)=>{
-   if(i< this.state.currentIndex){
-    return null
-   }
-   else if(i==this.state.currentIndex){
- 
-    return(
-<Animated.View 
-{...this.PanResponder.panHandlers}
-key={item.id} style={[this.rotateAndTranslate,{height:SCREEN_HEIGHT-hp('4'),width:SCREEN_WIDHT,padding:1,right:wp('-2.5%'),position:'absolute'}]}>
-
-<Animated.View style={{opacity:this.likeOpacity,transform:[{rotate:'-30deg'}],
-  position:'absolute', top:50,left:40,zIndex:1000}}>
-<Text style={{borderWidth:1,borderColor:'green', color:'green',fontSize:32,fontWeight:'800',padding:10}}>LIKE</Text>
-
-</Animated.View>
-
-<Animated.View style={{opacity:this.dislikeOpacity,transform:[{rotate:'30deg'}],
-  position:'absolute', top:50,right:40,zIndex:1000}}>
-<Text style={{borderWidth:1,borderColor:'red', color:'red',fontSize:32,fontWeight:'800',padding:10}}>NOPE</Text>
-
-</Animated.View>
-      <Image style={{flex:1, height:null,width:null,resizeMode:'cover',borderRadius:20}}
-      source ={{uri:item.photo}} />
-     <View style={sty.hintView}>
-      <View style={sty.iconDept}>
-        <Ionicons  name="md-person" size={20} color="#441964" />
-        <Text style= {sty.text}>{item.fullName}</Text>
-         </View>
-      <View style={sty.iconDept}>
-        <Ionicons name="md-timer" size={20} color="#441964" />
-        <Text style= {sty.text1}>{this.getAge(item.dob)} Years</Text>
-         </View>
-     <View style={sty.iconDept}>
-        <Ionicons name="md-map" size={20} color="#441964" />
-       <Text style= {sty.text2}>20 Miles Away</Text>
-         </View>
-      </View>
-     </Animated.View >
-        )
-         }
-
-    else{
-      return(
-      <Animated.View 
-   key={item.id} style={[{
-  opacity: this.nextCardOpacity,
-  transform:[{scale:this.nextCardScale}],
-  height:SCREEN_HEIGHT-hp('4'),width:SCREEN_WIDHT,padding:10,right:wp('-2.5%'),position:'absolute'}]}>
-      <Image style={{flex:1, height:null,width:null,resizeMode:'cover',borderRadius:20}}
-     source ={{uri:item.photo}} />
-      <View style={sty.hintView}>
-      <View style={sty.iconDept}>
-        <Ionicons  name="md-person" size={20} color="#441964" />
-        <Text style= {sty.text}>{item.fullName}</Text>
-         </View>
-      <View style={sty.iconDept}>
-        <Ionicons name="md-timer" size={20} color="#441964" />
-        <Text style= {sty.text1}>{this.getAge(item.dob)} Years</Text>
-         </View>
-     <View style={sty.iconDept}>
-        <Ionicons name="md-map" size={20} color="#441964"/>
-       <Text style= {sty.text2}>20 Miles Away</Text>
-         </View>
-      </View>
-     </Animated.View >
-     )
-    }
-    }).reverse()
-  }
 
   render() {
-
+    // If you want a stack of cards instead of one-per-one view, activate stack mode
+    // stack={true}
+     const {photo,visible,fullName,userId} =  this.state
   //console.log(cards)
     if (this.state.loading) {
       return <ActivityIndicator animating={this.state.loading}  size="large" />;
     }
     return (
-     <View  style={{flex:1}}>
-     <ImageBackground source={require('../assets/frame.png')} style={styles.dailymatchbakcgroundImage}>
-      <View  style={{height:hp('0.5')}}>
-
-     </View>
-     <View  style={{flex:1}}>
-     {this.renderUsers()}
-     </View>
-     <View  style={{height:hp('0.5')}}>
-
-     </View>
-     </ImageBackground>
-     </View>
+      <SwipeCards
+        cards={this.state.cards}
+        renderCard={(cardData) => <Card {...cardData} />}
+        renderNoMoreCards={() => <NoMoreCards />}
+        stack ={true}
+        handleYup={this.handleYup}
+        handleNope={this.handleNope}
+        handleMaybe={this.handleMaybe}
+        yupStyle={{backgroundColor:'#404040',top:wp('10%'),height:hp('10'),fontSize:20,zIndex:10000}}
+        nopeStyle={{backgroundColor:'#404040',height:hp('10'),fontSize:20,zIndex:1000}}
+        smoothTransition={true}
+        stack={true}
+        stackOffsetX={0}
+        stackOffsetY={0}
+        yupText={"Like"}
+        nopeText={"Nope"}
+        hasMaybeAction
+      />
     )
   }
 }
@@ -270,50 +195,38 @@ const sty = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     elevation: 1,
-  },
-   text: {
-    fontSize: 20,
-    
-    color:'#000000',
-    
-  },
-  texticon: {
-    fontSize: 20,
-    paddingTop: 1,
-    paddingBottom: 1,
-    top:wp('-37%'),
-    color:'#000000',
-    
-  },
-  text1: {
-    fontSize: 20,
-    paddingTop: 1,
-    paddingBottom: 1,
-    top:wp('-35%'),
-    color:'#000000',
-    
-  },
-  text2: {
-    fontSize: 20,
-    paddingTop: 1,
-    paddingBottom: 1,
-    top:wp('-33%'),
-      color:'#000000',
-    
-  },
-   hintView:{
-    
-     left:wp('3%'),
-     backgroundColor:'#eeeeee',
-     width:wp('60%'),
-     opacity:0.8,
-     
-   },
-   iconDept: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-     backgroundColor: '#eeeeee',
    
-     top:wp('-50%')
+    width: wp('100%'),
+    height: hp('80%'),
   },
+  thumbnail: {
+    width: '100%',
+    height: '100%',
+    resizeMode:'contain',
+    alignSelf: 'center',
+  },
+  text: {
+    fontSize: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    color:'black',
+    fontWeight: 'bold'
+  },
+  toplayer: {
+    fontSize: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor:'#cccccc',
+    opacity:0.5,
+    width:wp('50%'),
+    zIndex:2000,
+  },
+  noMoreCards: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  yupStyle:{
+    backgroundColor:'black'
+  }
 })
